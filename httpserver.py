@@ -31,13 +31,13 @@ from SimpleHTTPServer import SimpleHTTPRequestHandler
 import BaseHTTPServer, ssl, argparse, subprocess, signal, sys
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--port', type=int, help='The port number to listen on (default is 80/http or 443/https).')
-parser.add_argument('--http', action="store_true", help='Use HTTP rather than HTTPS.')
-parser.add_argument('--cors', action="store_true", help='Sets "Access-Control-Allow-Origin=*" and supporting headers.')
-parser.add_argument('--ufw', action="store_true", help='DO NOT add firewall rules using UFW (Uncomplicated Firewall).')
-parser.add_argument('--ip', help='IP address to use. Default is 0.0.0.0 aka all.')
-parser.add_argument('--cert', help='Certificate path. Default is /opt/httpserver/server.pem.', default='/opt/httpserver/server.pem')
 parser.add_argument('--banner', help='Set server banner. Default is SimpleHTTP and Python version.')
+parser.add_argument('--cert', help='Certificate path. Default is /opt/httpserver/server.pem.', default='/opt/httpserver/server.pem')
+parser.add_argument('--cors', action="store_true", help='Sets "Access-Control-Allow-Origin=*" and supporting headers.')
+parser.add_argument('--http', action="store_true", help='Use HTTP rather than HTTPS.')
+parser.add_argument('--ip', help='IP address to use. Default is 0.0.0.0 aka all.')
+parser.add_argument('--port', type=int, help='The port number to listen on (default is 80/http or 443/https).')
+parser.add_argument('--ufw', action="store_true", help='DO NOT add firewall rules using UFW (Uncomplicated Firewall).')
 args = parser.parse_args()
 
 # Setup listening ports
@@ -72,10 +72,10 @@ def ufw_add():
 
 # Remove firewall rules
 def ufw_rem():
-		rule = "ufw delete allow " + str(PORT) + "/tcp"
-		print "\n" + OKGREEN + "Removing firewall rule: " + rule + ENDC
-		rule += "&& ufw status"
-		subprocess.call(rule, shell=True)
+	rule = "ufw delete allow " + str(PORT) + "/tcp"
+	print "\n" + OKGREEN + "Removing firewall rule: " + rule + ENDC
+	rule += "&& ufw status"
+	subprocess.call(rule, shell=True)
 
 # Remove firewall rules on Ctrl^c if enabled
 def signal_handler(signal, frame):
@@ -83,7 +83,7 @@ def signal_handler(signal, frame):
 		ufw_rem()
 	print "\n" + OKGREEN + "Complete. " + ENDC
 	sys.exit(0)
-		
+
 # Catch Ctrl^C
 signal.signal(signal.SIGINT, signal_handler)
 
@@ -129,6 +129,5 @@ else:
 			ufw_add()
 		httpd.serve_forever()
 	except IOError:
-		print WARNING + "Missing cert?\n"
+		print WARNING + "Missing cert? For testing try running:\nopenssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout ./server.pem -out ./server.pem\n" + ENDC
 		parser.print_help()
-		print ENDC
