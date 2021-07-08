@@ -7,6 +7,8 @@ Useful for creating a quick PoC related to vulnerabilities such as CSRF, XSS, et
 You will need to generate a certificate if you plan on using HTTPS.
 
 #### Example self-signed cert if needed:
+New x509_cert_generator.py: https://github.com/amroot/x509_cert_generator
+
 ```
 openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout server.pem -out server.pem
 ```
